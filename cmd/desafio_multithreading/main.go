@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/TiagoSilvaLourenco/desafio-multithreading/configs"
-	"github.com/TiagoSilvaLourenco/desafio-multithreading/infra/webserver/handlers"
+	"github.com/TiagoSilvaLourenco/desafio-multithreading/interanal/infra/webserver/handlers"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

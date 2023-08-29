@@ -1,3 +1,11 @@
+### To Run
+
+- Navigate until folder cmd/desafio_multithreading
+
+go run main.go <cep>
+
+Ex: go run main.go 01311200
+
 # desafio-multithreading
 
 Neste desafio você terá que usar o que aprendemos com Multithreading e APIs para buscar o resultado mais rápido entre duas APIs distintas.

@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/TiagoSilvaLourenco/desafio-multithreading/internal/dto"
@@ -18,10 +16,10 @@ const (
 	ViaCepApi = "ViaCepApi"
 )
 
-func request(url, nameApi string, wg *sync.WaitGroup) {
+func request(url, nameApi string, ch chan interface{}) {
 
-	c := http.Client{Timeout: time.Second}
-	req, err := c.Get(url)
+	// c := http.Client{Timeout: time.Second}
+	req, err := http.Get(url)
 	if err != nil {
 		panic(err)
 	}
@@ -48,24 +46,31 @@ func request(url, nameApi string, wg *sync.WaitGroup) {
 	err = json.Unmarshal(res, data)
 	if err != nil {
 		panic(err)
-
 	}
-	wg.Done()
-	log.Println(data)
+
+	ch <- data
 }
 
 func main() {
-	waitGroup := sync.WaitGroup{}
-	waitGroup.Add(1)
+	chBrasilApi := make(chan interface{})
+	chViaCepApi := make(chan interface{})
 
 	for _, cep := range os.Args[1:] {
 		urlViaCep := "http://viacep.com.br/ws/" + cep + "/json/"
 		urlBrasilCep := "https://brasilapi.com.br/api/cep/v1/" + cep
 
-		go request(urlBrasilCep, BrasilApi, &waitGroup)
-		go request(urlViaCep, ViaCepApi, &waitGroup)
+		go request(urlBrasilCep, BrasilApi, chBrasilApi)
+		go request(urlViaCep, ViaCepApi, chViaCepApi)
+
+		select {
+		case resBrasilApi := <-chBrasilApi:
+			fmt.Println(resBrasilApi)
+
+		case resViaCepApi := <-chViaCepApi:
+			fmt.Println(resViaCepApi)
+
+		case <-time.After(time.Second):
+			println("Timeout")
+		}
 	}
-
-	waitGroup.Wait()
-
 }

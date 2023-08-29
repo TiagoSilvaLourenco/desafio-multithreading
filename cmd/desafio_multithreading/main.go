@@ -20,7 +20,7 @@ const (
 
 func request(url, nameApi string, wg *sync.WaitGroup) {
 
-	c := http.Client{Timeout: time.Microsecond}
+	c := http.Client{Timeout: time.Second}
 	req, err := c.Get(url)
 	if err != nil {
 		panic(err)

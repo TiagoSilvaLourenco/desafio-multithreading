@@ -2,7 +2,7 @@
 
 - Navigate until folder cmd/desafio_multithreading
 
-go run main.go <cep>
+go run main.go cep
 
 Ex: go run main.go 01311200
 
